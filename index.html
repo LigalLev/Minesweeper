@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +8,33 @@
     <title>Document</title>
     <link rel="stylesheet" href="./css/main.css">
 </head>
-<body onload="onInit()" >
-    <h1>Minesweeper</h1>
-    <div class = "container">
-    <table class = "board">
-        <tbody class = "board-cells">
 
-        </tbody>
-    </table>
+<body onload="onInit()">
+    <h1>Minesweeper</h1>
+    <div class="container">
+        <!-- <span class="cell-counter">0</span> -->
+        <h4 class="timer">0.000</h4>
+        <div>
+            <h4 class="life"></h4>
+            <h3 class="msg"></h3>
+            <button class="restart-btn" onclick="onRestart()">😀</button>
+        </div>
+        <table class="board">
+            <tbody class="board-cells">
+
+            </tbody>
+        </table>
+        <div>
+            <button class="level-btn" onclick="onBeginner()">Begginer</button>
+            <button class="level-btn" onclick="onMedium()">Midium</button>
+            <button class="level-btn" onclick="onExpert()">Expert</button>
+        </div>
+        
     </div>
-    
-<footer>Ligal Levinson</footer>
+
+    <footer>Ligal Levinson</footer>
 </body>
 <script src="./js/main.js"></script>
 <script src="./js/utils.js"></script>
+
 </html>
