@@ -52,7 +52,7 @@ function onRestart() {
     gGame.isFirstClick = true
     if (gGame.level === 'beginner') { gGame.lives = 2 }
     if (gGame.level === 'medium') { gGame.lives = 3 }
-    if (gGame.level === 'expret') { gGame.lives = 3 }
+    if (gGame.level === 'expert') { gGame.lives = 3 }
     resetTimer()
     onInit()
 }
@@ -73,13 +73,11 @@ function startTimer() {
     }, 10)
 }
 
-
 function resetTimer() {
     clearInterval(gTimer)
     const elTimer = document.querySelector('.timer')
     elTimer.innerText = '0.000'
 }
-
 
 function onHintMode(cellI, cellJ, board) {
     var timer
@@ -147,6 +145,8 @@ function getSafeClickCell() {
     var j = emptyLocation.j
     while (gBoard[i][j].isMarked || gBoard[i][j].isShown) {
         emptyLocation = drawNum2(gEmptyLocations)
+        i = emptyLocation.i
+        j = emptyLocation.j
     } return emptyLocation
 }
 
@@ -163,7 +163,7 @@ function onSafeClick() {
     elCell.style.backgroundColor = 'blue'
     const timer = setTimeout(() => {
         const elCell = getCell(i, j)
-        elCell.style.backgroundColor = 'gray'
+        elCell.style.backgroundColor = '#645CBB'
     }, 1000)
 }
 

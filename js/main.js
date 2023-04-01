@@ -8,6 +8,7 @@ var gLevel = {
     MINES: 2
 
 }
+
 var gGame = {
     isOn: false,
     shownCount: 0,
@@ -48,8 +49,6 @@ function onInit() {
     renderLives()
     renderHints()
     renderRestartBtn()
-    // const elRestartBtn = document.querySelector('.restart-btn')
-    // elRestartBtn.innerText = NORMAL
     // closeModal()
     resetTimer()
 }
@@ -200,11 +199,6 @@ function onCellMarked(event, elCell, i, j) {
 }
 function checkVictory(i, j) {
     // console.log('gGame.SownCount:', gGame.shownCount)
-    ///// if the count of the shown === the size of all board - the mines it means all cells are cheked
-    // if (gGame.shownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES) {
-        ///// you marked all that is open
-        // console.log('shown: ' + gGame.shownCount)
-        // console.log('marked: ' + gGame.markedCount)
         if (gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
             gGame.isVictory = true
             gameOver()

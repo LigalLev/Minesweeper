@@ -20,7 +20,6 @@ table {
     margin-bottom: 20px;
     background-color: #645CBB;
     cursor: pointer;
-
 }
 
 td {
@@ -43,22 +42,14 @@ td {
     color: transparent;
 }
 
-.modal {
-    display: none;
-    border: solid 3px grey;
-    width: 300px;
-    height: 200px;
-    background-color: rgb(222, 226, 228);
-    color: black;
-    font-size: 32px;
-
-    position: absolute;
-    top: 200px;
-    left: calc(50% - 150px);
-}
-
 .level-btn {
     cursor: pointer;
+    padding: 10px;
+    background-color: #BFACE2;
+    border-radius: 10px;
+    border: none;
+    color:  #645CBB;
+    font-weight: bold;
 }
 
 footer {
@@ -66,8 +57,6 @@ footer {
 }
 
 .best-score {
-    margin-right: 50px;
-    border: dotted;
     padding: 5px;
 }
 
@@ -77,11 +66,23 @@ footer {
 }
 .safe-btn {
     margin-top: 30px;
-    padding: 20px;
+    padding: 10px;
     background-color: #BFACE2;
-    border-radius: 20%;
+    border-radius: 10px;
+    border: none;
+    color:  #645CBB;
+    font-weight: bold;
 }
 
 .safe-txt {
     margin-top: 5px;
+}
+
+.restart-btn {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.best-score{
+    margin: 10px;
 }
