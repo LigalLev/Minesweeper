@@ -1,5 +1,7 @@
 body {
     text-align: center;
+    background-color: #EBC7E6;
+    color: #645CBB
 }
 
 /* 
@@ -16,7 +18,7 @@ table {
 .board {
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: aquamarine;
+    background-color: #645CBB;
     cursor: pointer;
 
 }
@@ -24,14 +26,17 @@ table {
 td {
     user-select: none;
     overflow: hidden;
-    border: 4px solid gray;
+    border: 2px solid #BFACE2;
+   
+
 }
 
 .cell {
     height: 30px;
     width: 30px;
     overflow: hidden;
-    background-color: gray;
+    background-color:  #645CBB;
+    color: #EBC7E6;
 }
 
 .transparent {
@@ -58,4 +63,25 @@ td {
 
 footer {
     margin-top: 20px;
+}
+
+.best-score {
+    margin-right: 50px;
+    border: dotted;
+    padding: 5px;
+}
+
+.timer {
+    border: dotted;
+    padding: 5px;
+}
+.safe-btn {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #BFACE2;
+    border-radius: 20%;
+}
+
+.safe-txt {
+    margin-top: 5px;
 }

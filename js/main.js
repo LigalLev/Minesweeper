@@ -2,14 +2,11 @@
 
 const MINE = '💣'
 const FLAG = '🚩'
-const LIFE = '❤️'
-const LOSE = '🤯'
-const WIN = '😎'
-const NORMAL = '😀'
 
 var gLevel = {
     SIZE: 4,
     MINES: 2
+
 }
 var gGame = {
     isOn: false,
@@ -18,28 +15,41 @@ var gGame = {
     secsPassed: 0,
     isVictory: false,
     isFirstClick: true,
-    lives: 3
+    isHint: false,
+    lives: 2,
+    hints: 3,
+    level: 'beginner',
+    safeCount: 3
+
 }
 
 var gBoard
 var gEmptyLocations
 var gTimer
+var gScore = 'bestBeginnerScore'
+
 
 function onInit() {
     gBoard = buildBoard()
-    console.log(gBoard)
+    // console.log(gBoard)
     getEmptyLocations(gBoard)
     // addRandomMines()
     renderBoard(gBoard)
     gGame.isOn = true
     gGame.shownCount = 0
     gGame.markedCount = 0
+    ShowBestScore()
     gGame.secsPassed = 0
     gGame.isVictory = false
-    gGame.lives = 3
+    
+    gGame.safeCount = 3 
+    const elSafeTxt = document.querySelector('.safe-txt')
+    elSafeTxt.innerText = '3 Clicks available'
     renderLives()
-    const elRestartBtn = document.querySelector('.restart-btn')
-    elRestartBtn.innerText = NORMAL
+    renderHints()
+    renderRestartBtn()
+    // const elRestartBtn = document.querySelector('.restart-btn')
+    // elRestartBtn.innerText = NORMAL
     // closeModal()
     resetTimer()
 }
@@ -75,11 +85,13 @@ function renderBoard() {
         for (var j = 0; j < gLevel.SIZE; j++) {
             const cell = gBoard[i][j]
             var className = `cell transparent cell-${i}-${j}`
-            // var className = (cell.isMine) ? 'mine' : ''
+            var innerText = (cell.isMine) ? MINE : cell.minesAroundCount
             // if (cell.isFlages) className += ' Flag'
+
             strHTML += `\t<td class="${className}" 
                             onclick="cellClicked(this,${i}, ${j})"
-                            oncontextmenu="onCellMarked(event,this, ${i},${j})">${cell.minesAroundCount}
+                            oncontextmenu="onCellMarked(event,this, ${i},${j})">${innerText}
+            
                          </td>\n`
         }
         strHTML += `</tr>\n`
@@ -90,15 +102,16 @@ function renderBoard() {
     // elCell.addEventListener("contextmenu", (event) => { event.preventDefault()})
 }
 
-function countNeighbors(cellI, cellJ, mat) {
+
+function countNeighbors(cellI, cellJ, board) {
     var minesAroundCount = 0
 
     for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= mat.length) continue
+        if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= mat[i].length) continue
-            if (mat[i][j].isMine) minesAroundCount++
+            if (j < 0 || j >= board[i].length) continue
+            if (board[i][j].isMine) minesAroundCount++
         }
     }
     return minesAroundCount
@@ -114,8 +127,9 @@ function setMinesNegsCount(board) {
 }
 
 function cellClicked(elCell, i, j) {
-    if (!gGame.isOn) return
     const cell = gBoard[i][j]
+    if (!gGame.isOn) return
+    if (cell.isShown || cell.isMarked) return
     if (gGame.isFirstClick) {
         // setTimer()
         startTimer()
@@ -124,21 +138,26 @@ function cellClicked(elCell, i, j) {
         addRandomMines()
         setMinesNegsCount(gBoard)
         renderBoard(gBoard)
-        var elCurrCell = document.querySelector(`.cell-${i}-${j}`)
+        var elCurrCell = getCell(i, j)
         elCurrCell.classList.remove('transparent')
         // console.log(elCell, 'hi');
     }
+    if (gGame.isHint) {
+        onHintMode(i, j, gBoard)
+        return
+    }
+    // console.log(cell.isShown);
     if (cell.isMine) {
+
         elCell.classList.remove('transparent')
-        elCell.innerText = MINE
+        // elCell.innerText = MINE
         elCell.style.backgroundColor = '#FF2222'
         gameOver()
     }
-    if (cell.isShown || cell.isMarked) return
+    
     if (!cell.isShown) {
         cell.isShown = true
         gGame.shownCount++
-
         // alert('hi')
         // console.log(elcell);
         elCell.classList.remove('transparent')
@@ -154,21 +173,13 @@ function addRandomMines() {
         var emptyLocation = drawNum2(gEmptyLocations)
         if (!emptyLocation) return
         gBoard[emptyLocation.i][emptyLocation.j].isMine = true
-        console.log('mine');
-    }
-}
-
-function getEmptyLocations(board) {
-    gEmptyLocations = []
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[0].length; j++) {
-            gEmptyLocations.push({ i, j })
-        }
+        // console.log('mine');
     }
 }
 
 function onCellMarked(event, elCell, i, j) {
     event.preventDefault()
+    if (!gGame.isOn) return
     if (gBoard[i][j].isShown) return
     gBoard[i][j].isMarked = !gBoard[i][j].isMarked
     if (gBoard[i][j].isMarked) {
@@ -177,31 +188,30 @@ function onCellMarked(event, elCell, i, j) {
         if (gBoard[i][j].isMine) {
             gGame.markedCount++
         }
-        // const elCellCounter = document.querySelector('.cell-counter')
-        // elCellCounter.innerText = gGame.markedCount
-        console.log(gGame.markedCount);
     } else {
         elCell.classList.add('transparent')
-        elCell.innerText = gBoard[i][j].minesAroundCount
-        if (gBoard[i][j].isMine) {
+        if(gBoard[i][j].isMine){
+            elCell.innerText = MINE
             gGame.markedCount--
-        }
+        } else elCell.innerText = gBoard[i][j].minesAroundCount
+        
     }
     checkVictory()
 }
 function checkVictory(i, j) {
-    console.log('gGame.SownCount:', gGame.shownCount)
+    // console.log('gGame.SownCount:', gGame.shownCount)
     ///// if the count of the shown === the size of all board - the mines it means all cells are cheked
-    if (gGame.shownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES) {
+    // if (gGame.shownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES) {
         ///// you marked all that is open
-        console.log('shown: ' + gGame.shownCount)
-        console.log('marked: ' + gGame.markedCount)
+        // console.log('shown: ' + gGame.shownCount)
+        // console.log('marked: ' + gGame.markedCount)
         if (gGame.shownCount + gGame.markedCount === gLevel.SIZE * gLevel.SIZE) {
             gGame.isVictory = true
             gameOver()
+            saveBestScore()
         }
     }
-}
+// }
 
 function gameOver() {
     if (gGame.isVictory) {
@@ -230,7 +240,7 @@ function gameOver() {
         renderLives()
         const elRestartBtn = document.querySelector('.restart-btn')
         elRestartBtn.innerText = LOSE
-        
+
         clearInterval(gTimer)
     }
 }
@@ -238,9 +248,8 @@ function revealAllMines() {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
             if (gBoard[i][j].isMine) {
-                const elCell = document.querySelector(`.cell-${i}-${j}`)
+                const elCell = getCell(i, j)
                 elCell.classList.remove('transparent')
-                elCell.innerText = MINE
             }
         }
     }
@@ -258,7 +267,7 @@ function expandShown(board, cellI, cellJ) {
             if (board[i][j].isMine) return
 
             // if (board[i][j].minesAroundCount === 0) {
-            const elNeighborCell = document.querySelector(`.cell-${i}-${j}`)
+            const elNeighborCell = getCell(i, j)
             // board[i][j].isShown = true
             // elNeighborCell.classList.remove('transparent')
             // elNeighborCell.innerText = board[i][j].minesAroundCount
@@ -283,83 +292,4 @@ function removeFirstCellClicked(i, j) {
     }
 }
 
-function onBeginner() {
-    gLevel.SIZE = 4
-    gLevel.MINES = 2
-    gGame.isOn = false
-    gGame.isFirstClick = true
-    onInit()
-}
-function onMedium() {
-    gLevel.SIZE = 8
-    gLevel.MINES = 14
-    gGame.isOn = false
-    gGame.isFirstClick = true
-    onInit()
-}
-function onExpert() {
-    gLevel.SIZE = 12
-    gLevel.MINES = 32
-    gGame.isOn = false
-    gGame.isFirstClick = true
-    onInit()
-}
-/////can do it with one function but then need to enter objects to html, wasnt sure if it is good practice
-// function changeLevel (newLevel){
-//     gLevel = newLevel
-//     onInit()
-// }
-
-function renderLives() {
-    var lifeOnBoard = ''
-    for (var i = 0; i < gGame.lives; i++) {
-        lifeOnBoard += LIFE
-
-    }
-    const elLife = document.querySelector('.life')
-    elLife.innerText = lifeOnBoard
-}
-
-function onRestart() {
-    gGame.isOn = false
-    gGame.isFirstClick = true
-    resetTimer()
-    onInit()
-}
-//// couldnt choose which one to use, this one uses the global object, but the second one is nicer
-function setTimer() {
-    gTimer = setInterval(() => {
-        gGame.secsPassed++
-        const elTimer = document.querySelector('.timer')
-        elTimer.innerText = gGame.secsPassed
-        console.log(elTimer);
-    }, 1000)
-}
-
-function resetTimer() {
-    clearInterval(gTimer)
-    const elTimer = document.querySelector('.timer')
-    elTimer.innerText = '0.000'
-}
-
-function openModal(msg) {
-    const elModal = document.querySelector('.modal')
-    const elSpan = elModal.querySelector('.msg')
-    elSpan.innerText = msg
-    elModal.style.display = 'block'
-}
-
-function closeModal() {
-    const elModal = document.querySelector('.modal')
-    elModal.style.display = 'none'
-}
-
-function startTimer() {
-    var startTime = Date.now()
-    const elTimer = document.querySelector('.timer')
-    gTimer = setInterval(() => {
-        const diff = Date.now() - startTime
-        elTimer.innerText = (diff / 1000).toFixed(3)
-    }, 10)
-}
 

@@ -13,11 +13,20 @@
     <h1>Minesweeper</h1>
     <div class="container">
         <!-- <span class="cell-counter">0</span> -->
-        <h4 class="timer">0.000</h4>
+        <span class = "best-score">Best Score: </span>
+        <span class="timer">0.000</span> 
+        
+        <div>
+        <button class ="safe-btn" onclick="onSafeClick()">safe Click</button>
+        <h6 class = "safe-txt">3 Clicks available</h6>
+        </div>
+        <div class = "hints-btns">
+        </div>
         <div>
             <h4 class="life"></h4>
+           
             <h3 class="msg"></h3>
-            <button class="restart-btn" onclick="onRestart()">😀</button>
+            <button class="restart-btn" onclick="onRestart()"></button>
         </div>
         <table class="board">
             <tbody class="board-cells">
@@ -25,16 +34,16 @@
             </tbody>
         </table>
         <div>
-            <button class="level-btn" onclick="onBeginner()">Begginer</button>
-            <button class="level-btn" onclick="onMedium()">Midium</button>
+            <button class="level-btn" onclick="onBeginner()">Beginner</button>
+            <button class="level-btn" onclick="onMedium()">Medium</button>
             <button class="level-btn" onclick="onExpert()">Expert</button>
         </div>
-        
     </div>
 
     <footer>Ligal Levinson</footer>
 </body>
 <script src="./js/main.js"></script>
 <script src="./js/utils.js"></script>
+<script src="./js/buttons.js"></script>
 
 </html>
