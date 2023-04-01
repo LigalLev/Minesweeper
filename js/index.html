@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body onload="onInit()">
+    <h1>Minesweeper</h1>
+    <div class="container">
+        <div class="side-btns">
+            <div class="hints-btns"></div>
+            <button class="safe-btn" onclick="onSafeClick()">safe Click</button>
+            <h6 class="safe-txt">3 Clicks available</h6>
+        </div>
+        <div>
+            <span class="life"></span>
+            <button class="restart-btn" onclick="onRestart()"></button>
+            <span class="timer">0.000</span>
+        </div>
+        <div class="container2">
+            <table class="board">
+                <tbody class="board-cells">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h4 class="best-score">Best Score</h4>
+    <div>
+        <button class="level-btn" onclick="onBeginner()">Beginner</button>
+        <button class="level-btn" onclick="onMedium()">Medium</button>
+        <button class="level-btn" onclick="onExpert()">Expert</button>
+    </div>
+    </div>
+
+    <footer>Ligal Levinson</footer>
+    <script src="./js/main.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/buttons.js"></script>
+
+</body>
+
+</html>
